@@ -154,36 +154,54 @@ def convert_string_to_messsage(prompt: str) -> List[Dict[str, str]]:
 def count_string_tokens(prompt: str, model: str) -> int:
     """
     Returns the number of tokens in a (prompt or completion) text string.
-
-    Args:
-        prompt (str): The text string
-        model_name (str): The name of the encoding to use. (e.g., "gpt-3.5-turbo")
-
-    Returns:
-        int: The number of tokens in the text string.
+    Uses Gemini API for Gemini models with a fallback to tiktoken.
+    Uses tiktoken for other models with a fallback for unknown models.
     """
-    model = model.lower()
+    # These imports should be at the top of the file, but ensuring they are accessible
+    import os
+    import tiktoken
+    import google.generativeai as genai
+    import logging
 
+    logger = logging.getLogger(__name__) # Make sure logger is defined
+    
+    model = model.lower()
     if "/" in model:
         model = model.split("/")[-1]
 
     if "claude-" in model:
+        # This part of the original logic is correct.
         raise ValueError(
             "Warning: Anthropic does not support this method. Please use the `count_message_tokens` function for the exact counts."
         )
 
-    try:
-        if "gemini" in model:
-            api_key = os.getenv("GEMINI_API_KEY")
+    # --- Start of new, robust logic ---
+    if "gemini" in model:
+        try:
+            # Try to use the official Gemini API for counting first
+            api_key = os.getenv("GOOGLE_API_KEY") # Use the standard GOOGLE_API_KEY
+            if not api_key:
+                 # Try the other key name just in case
+                api_key = os.getenv("GEMINI_API_KEY")
+
             if api_key:
                 genai.configure(api_key=api_key)
                 gemini_model = genai.GenerativeModel(f"models/{model}")
                 token_count = gemini_model.count_tokens([prompt])
                 return token_count.total_tokens
-        else:
-            encoding = tiktoken.encoding_for_model(model)
+            else:
+                # If no key, don't even try. Fall through to use tiktoken.
+                logger.warning("No Gemini API key found, falling back to tiktoken for counting.")
+        except Exception as e:
+            # If the API call fails for any reason, fall through to use tiktoken.
+            logger.warning(f"Gemini token count failed ({e}), falling back to tiktoken.")
+    
+    # Fallback for Gemini, or primary path for OpenAI/other models
+    try:
+        encoding = tiktoken.encoding_for_model(model)
     except KeyError:
-        logger.warning("Warning: model not found. Using cl100k_base encoding.")
+        # If model is not in tiktoken's list (which includes our Gemini fallback case)
+        logger.warning(f"Model {model} not found in tiktoken, using cl100k_base as a default.")
         encoding = tiktoken.get_encoding("cl100k_base")
 
     return len(encoding.encode(prompt))

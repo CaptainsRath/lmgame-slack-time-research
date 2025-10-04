@@ -5,7 +5,7 @@
         "scenario": "scenario",
         "obs_type": "IMAGE"
     },
-    "render_mode_human": true,
+    "render_mode_human": false,
     "max_unchanged_steps_for_termination": 100,
     "action_mapping": {
         "noop":       [0, 0, 0, 0, 0, 0, 0, 0, 0],

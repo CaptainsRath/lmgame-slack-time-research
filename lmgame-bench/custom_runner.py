@@ -1,5 +1,6 @@
 import argparse
 import os
+os.environ['GOOGLE_API_KEY'] = 'AIzaXXXXXXX'
 import json
 import datetime
 import time
@@ -13,6 +14,8 @@ import random
 import gymnasium as gym
 
 import retro
+
+
 from retro.enums import Actions, Observations, State # retro.data will be used directly for Integrations
 
 from gamingagent.agents.base_agent import BaseAgent

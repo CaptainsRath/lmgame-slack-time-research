@@ -6,6 +6,7 @@ from PIL import Image
 import numpy as np
 import importlib
 import inspect
+import google.generativeai as genai
 from typing import Optional, Any
 
 # Import modules
@@ -63,6 +64,9 @@ class BaseAgent(ABC):
             vllm_url (str, optional): URL for vLLM inference endpoint
             modal_url (str, optional): URL for Modal inference endpoint
         """
+        
+        
+
         self.game_name = game_name
         self.model_name = model_name
         self.harness = harness

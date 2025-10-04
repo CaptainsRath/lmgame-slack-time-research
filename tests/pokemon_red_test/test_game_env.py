@@ -1,7 +1,7 @@
 import random
 import time
 import numpy as np
-from gamingagent.envs.custom_05_pokemon_red.pokemonRedEnv import PokemonRedEnv
+from gamingagent.envs.custom_06_pokemon_red.pokemonRedEnv import PokemonRedEnv
 
 
 def test_random_play():
@@ -10,7 +10,7 @@ def test_random_play():
     
     try:
         print("Initializing Pokemon Red Environment...")
-        rom_path = "gamingagent/configs/custom_05_pokemon_red/rom/pokemon.gb"
+        rom_path = "gamingagent/configs/custom_06_pokemon_red/rom/pokemon.gb"
         env = PokemonRedEnv(rom_path=rom_path, render_mode="human")
         
         print("Resetting environment...")
@@ -117,7 +117,7 @@ def test_save_load_state():
     
     try:
         # Initialize environment with ROM path
-        rom_path = "gamingagent/configs/custom_05_pokemon_red/rom/pokemon.gb"
+        rom_path = "gamingagent/configs/custom_06_pokemon_red/rom/pokemon.gb"
         env = PokemonRedEnv(rom_path=rom_path, render_mode="human")
         print("✓ Environment created")
         
@@ -183,7 +183,7 @@ def test_gym_adapter_integration():
     try:
         # Test initialization with adapter parameters
         env = PokemonRedEnv(
-            rom_path="gamingagent/configs/custom_05_pokemon_red/rom/pokemon.gb",
+            rom_path="gamingagent/configs/custom_06_pokemon_red/rom/pokemon.gb",
             render_mode="human",
             observation_mode_for_adapter="both",  # Test both vision and text
             agent_cache_dir_for_adapter="cache/test_pokemon_red"

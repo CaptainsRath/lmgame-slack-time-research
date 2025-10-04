@@ -1,6 +1,9 @@
 import argparse
 import subprocess
 import os
+os.environ['GOOGLE_API_KEY'] = 'AIzaXXXXXXX'
+
+
 import sys
 import multiprocessing
 from typing import List, Tuple
@@ -62,7 +65,7 @@ def run_single_game_config(game_name: str, model_name: str, use_harness: bool, c
 
 def main():
     parser = argparse.ArgumentParser(description="Run game simulations in parallel using custom_runner.py and then trigger evaluation.")
-    parser.add_argument("--model_name", type=str, default="gemini-2.0-flash",
+    parser.add_argument("--model_name", type=str, default="gemini-2.5-flash",
                         help="Name of the model for the agent.")
     parser.add_argument("--game_names", type=str, 
                         default="sokoban,tetris,candy_crush,twenty_forty_eight",

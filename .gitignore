@@ -63,6 +63,7 @@ desktop.ini
 
 # 📝 Environment Variables
 setup_env.sh
+echo "inputLog" >> .gitignore
 
 # 🎮 ROM and Game Files
 *.sfc

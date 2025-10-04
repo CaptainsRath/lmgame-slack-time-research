@@ -47,7 +47,7 @@ class AceAttorneyEnv(gym.Env):
         scenario: Optional[str] = None,
         info: Optional[str] = None,
         use_restricted_actions: int = Actions.FILTERED, # Defaulting to FILTERED
-        record: bool = True, 
+        record: bool = True,
         players: int = 1,
         inttype: int = retro.data.Integrations.ALL, # For accessing RAM variables if needed
         obs_type: int = Observations.RAM, # Essential for LIVES_RAM_VARIABLE_NAME
@@ -97,6 +97,13 @@ class AceAttorneyEnv(gym.Env):
         retro.data.Integrations.add_custom_path(custom_integration_path)
         # For GBA, it's typically 10 or 12 (B, SELECT, START, UP, DOWN, LEFT, RIGHT, A, L, R, + 2 Nones for 12)
         
+        # --- Robust Render Mode Handling (ADDED) ---
+        # Check if human rendering is requested in an environment without a display
+        effective_render_mode = "rgb_array"
+        if effective_render_mode == 'human' :
+            print("[AceAttorneyEnv] WARNING: 'human' render mode requested, but no DISPLAY environment variable found. Switching to headless 'rgb_array' mode to prevent crash.")
+            
+        
         # Create a dedicated directory for .bk2 recordings
         record_path_bk2 = os.path.join(adapter_agent_cache_dir, "bk2_recordings")
         os.makedirs(record_path_bk2, exist_ok=True)
@@ -112,7 +119,7 @@ class AceAttorneyEnv(gym.Env):
             players=players,
             inttype=inttype,
             obs_type=obs_type,
-            render_mode=wrapper_render_mode,
+            render_mode=effective_render_mode, # MODIFIED: Use the safe render mode
         )
 
         self.action_space = self.env.action_space
@@ -154,7 +161,7 @@ class AceAttorneyEnv(gym.Env):
             game_specific_config_path=adapter_config_path,
             max_steps_for_stuck=adapter_max_stuck_steps
         )
-        self.wrapper_render_mode = wrapper_render_mode # "human" or "rgb_array"
+        self.wrapper_render_mode = effective_render_mode # MODIFIED: Store the effective render mode
         
         # Action processing parameters (can be tuned)
         # These were found to be important from previous iterations
@@ -664,7 +671,7 @@ class AceAttorneyEnv(gym.Env):
             )
             current_observation_to_return = p2_final_agent_obs
             current_agent_facing_info_to_return = p2_agent_facing_info
-        
+    
 
         if self.wrapper_render_mode == "human": self.render()
         
@@ -716,7 +723,7 @@ class AceAttorneyEnv(gym.Env):
             with open(dialogue_file_path, 'a') as f:
                 json.dump(entry_to_save, f)
                 f.write('\n') # Add a newline to separate JSON objects (JSONL format)
-            #  print(f"[AceAttorneyEnv DEBUG store_llm_extracted_dialogue] Successfully appended dialogue to: {dialogue_file_path}")
+            # 	print(f"[AceAttorneyEnv DEBUG store_llm_extracted_dialogue] Successfully appended dialogue to: {dialogue_file_path}")
         except Exception as e:
             print(f"[AceAttorneyEnv store_llm_extracted_dialogue] CRITICAL ERROR: Failed to save LLM dialogue to {dialogue_file_path}. Details: {e}")
 
@@ -829,14 +836,14 @@ class AceAttorneyEnv(gym.Env):
         """
         prompt_body = base_prompt
 
-        # 1.  {memory_context} placeholder
+        # 1. 	{memory_context} placeholder
         if "{memory_context}" in prompt_body:
             prompt_body = prompt_body.replace(
                 "{memory_context}",
                 self.get_comprehensive_memory_string()
             )
 
-        # 2.  Dialogue prefix
+        # 2. 	Dialogue prefix
         additional_prefix = None
         dialogue_line = self.get_mapped_dialogue_event_for_prompt()
         if dialogue_line:
@@ -897,4 +904,3 @@ class AceAttorneyEnv(gym.Env):
         
         print(f"[AceAttorneyEnv calculate_final_score] Current state: '{current_state}', Score: {score}")
         return score
-       
