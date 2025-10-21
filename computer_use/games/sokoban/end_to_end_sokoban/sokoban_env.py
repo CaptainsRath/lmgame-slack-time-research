@@ -1,7 +1,6 @@
 # filename: gamingagent/envs/sokoban_env.py
 #!/usr/bin/env python
 
-# --- Add local gym-sokoban to path ---
 import sys
 import os
 # Get the directory containing this file (envs/)
@@ -20,16 +19,29 @@ if os.path.isdir(local_sokoban_path):
     # print(f"DEBUG: Added local gym-sokoban path: {local_sokoban_path}")
 else:
     print(f"DEBUG: Local gym-sokoban path not found at {local_sokoban_path}. Using installed version.")
-# --- End Add local path ---
 
 # Now the regular imports start
 import gymnasium as gym
-# Try importing gym_sokoban, handle potential import error
+# Try importing gym_sokoban dynamically to avoid static analysis/import resolution errors
 try:
-    import gym_sokoban
-    from gym_sokoban.envs.sokoban_env import SokobanEnv, ACTION_LOOKUP, CHANGE_COORDINATES
-    from gym_sokoban.envs.render_utils import room_to_rgb
-except ImportError:
+    import importlib
+    import importlib.util
+
+    # Check if the package is importable first
+    if importlib.util.find_spec('gym_sokoban') is None:
+        raise ImportError("gym_sokoban not available")
+
+    # Import package and required submodules dynamically
+    gym_sokoban = importlib.import_module('gym_sokoban')
+    sokoban_env_mod = importlib.import_module('gym_sokoban.envs.sokoban_env')
+    render_utils_mod = importlib.import_module('gym_sokoban.envs.render_utils')
+
+    SokobanEnv = getattr(sokoban_env_mod, 'SokobanEnv')
+    ACTION_LOOKUP = getattr(sokoban_env_mod, 'ACTION_LOOKUP')
+    CHANGE_COORDINATES = getattr(sokoban_env_mod, 'CHANGE_COORDINATES')
+    room_to_rgb = getattr(render_utils_mod, 'room_to_rgb')
+
+except (ImportError, ModuleNotFoundError):
     print("Warning: gym_sokoban not found. Please install it: pip install gym-sokoban")
     # Define dummy classes/variables if needed for type hinting or basic structure
     # This allows the file to be imported even if gym_sokoban isn't installed yet,

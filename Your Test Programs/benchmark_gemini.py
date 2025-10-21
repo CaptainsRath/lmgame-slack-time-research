@@ -6,7 +6,7 @@ import datetime
 import os
 from tools.serving.api_providers import gemini_text_completion
 
-API_KEY = "AIzaXXXXXXX" 
+API_KEY = "AIzaXXXXXXXX" 
 MODEL_NAME = "gemini-2.5-flash"
 NUMBER_OF_RUNS = 10
 DETAILED_LOG_FILE = "performance_log.txt"

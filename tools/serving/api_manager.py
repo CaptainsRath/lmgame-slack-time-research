@@ -163,7 +163,6 @@ class APIManager:
         current_call_cost = Decimal(costs.get('prompt_cost', 0)) + Decimal(costs.get('completion_cost', 0))
         self.total_session_cost += current_call_cost
 
-        # MODIFIED: Add slack time to performance metrics for JSON logging
         if slack_time_s is not None:
             performance_metrics['slack_time_s'] = slack_time_s
 
@@ -203,7 +202,6 @@ class APIManager:
             f"Total Output Cost: ${costs.get('completion_cost', Decimal('0')):.6f}\n"
             f"Call Cost: ${current_call_cost:.6f}\n"
         )
-        # MODIFIED: Log slack time here if available, then other performance metrics
         if slack_time_s is not None:
             cost_log_entry += f"Slack Time: {slack_time_s:.3f}s\n"
         
@@ -370,7 +368,6 @@ class APIManager:
         """
         Make a vision-only completion API call.
         """
-        # MODIFIED: Calculate slack time but do not log it here
         slack_time_s = None
         if self.last_action_end_time is not None:
             slack_time_s = time.time() - self.last_action_end_time
@@ -403,7 +400,6 @@ class APIManager:
             
             costs = self._calculate_costs(model_name=model_name, prompt=empty_prompt, completion=completion, image_path=image_path)
             
-            # MODIFIED: Pass slack time to the logger
             self._log_api_call(
                 model_name=model_name, input_data=input_data, output_data=completion, 
                 costs=costs, performance_metrics=performance_metrics, session_name=session_name, modality="vision_only",
@@ -434,7 +430,6 @@ class APIManager:
         """
         Make a text-only completion API call, now universally handling performance metrics.
         """
-        # MODIFIED: Calculate slack time but do not log it here
         slack_time_s = None
         if self.last_action_end_time is not None:
             slack_time_s = time.time() - self.last_action_end_time
@@ -480,7 +475,6 @@ class APIManager:
             
             costs = self._calculate_costs(model_name=model_name, prompt=formatted_prompt, completion=completion)
             
-            # MODIFIED: Pass slack time to the logger
             self._log_api_call(
                 model_name=model_name, input_data=input_data, output_data=completion, 
                 costs=costs, performance_metrics=performance_metrics, session_name=session_name, modality="text_only",
@@ -517,7 +511,6 @@ class APIManager:
         stream: bool = True,
         **kwargs
     ) -> Tuple[str, Dict[str, Any]]:
-        # MODIFIED: Calculate slack time but do not log it here
         slack_time_s = None
         if self.last_action_end_time is not None:
             slack_time_s = time.time() - self.last_action_end_time
@@ -551,7 +544,6 @@ class APIManager:
                 costs["prompt_tokens"] += image_tokens
                 costs["prompt_cost"] += image_cost
 
-            # MODIFIED: Pass slack time to the logger
             self._log_api_call(
                 model_name=model_name, input_data=input_data, output_data=completion, 
                 costs=costs, performance_metrics=performance_metrics, session_name=session_name, modality="multi_image",
