@@ -19,7 +19,7 @@ echo "STEP 3: Installing libGl, used for graphics interfaces."
 conda install -n "$ENV_NAME" -c conda-forge libgl -y
 
 echo "STEP 4: Correcting Numpy (We use Numba, which is a deprecated feature)"
-conda run -n "$ENV_NAME" pip install -v numpy==1.26
+conda run -n "$ENV_NAME" pip install -v numpy==1.24.4
 
 
 echo "Enviornment is installed. Run 'conda activate lmgame' in your bash terminal before running anything"
