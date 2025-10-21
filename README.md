@@ -90,9 +90,9 @@ export XAI_API_KEY={YOUR_XAI_API_KEY}
 export DEEPSEEK_API_KEY={YOUR_DEEPSEEK_API_KEY}
 ```
 ## IMPORTANT FOR THIS PROJECT: Insert API key into ALL files listed:
-### run.py
-### custom_runner.py
-### benchmark_gemini.py
+### run.py in lmgame-bench
+### custom_runner.py in lmgame-bench
+### benchmark_gemini.py in root (albeit this file is used for testing purposes and is not needed by the benchmark)
 
 ⚠️ **Evaluating or deploying the agents with high-end models could incur higher costs!**
 
