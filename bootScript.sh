@@ -22,4 +22,4 @@ echo "STEP 4: Correcting Numpy (We use Numba, which is a deprecated feature)"
 conda run -n "$ENV_NAME" pip install -v numpy==1.26
 
 
-echo "Hope you enjoyed your coffee, run 'conda activate lmgame' in your bash terminal before running anything"
+echo "Enviornment is installed. Run 'conda activate lmgame' in your bash terminal before running anything"
