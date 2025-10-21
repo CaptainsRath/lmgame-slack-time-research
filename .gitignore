@@ -52,7 +52,8 @@ pip-log.txt
 pip-delete-this-directory.txt
 
 # 📝 IDE and Editor Specific Files
-.vscode/
+.vscode/*
+!/.vscode/tasks.json
 .idea/
 *.iml
 

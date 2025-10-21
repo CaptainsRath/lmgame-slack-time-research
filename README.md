@@ -39,17 +39,11 @@ Our repo also provides an easy solution of deploying computer use agents (CUAs) 
 
 ## Installation
 
-1. Clone this repository:
-```
-git clone https://github.com/lmgame-org/GamingAgent.git
-cd GamingAgent
-```
-2. Install dependency:
-```
-conda create -n lmgame python==3.10 -y
-conda activate lmgame
-pip install -e .
-```
+1. Clone this repository into VSCode (for our purposes)
+2. When in VSCode, press Ctrl + Shift + B
+3. Wait for script to finish running
+4. Return to terminal and run "conda activate lmgame"
+
 
 ## APIs
 
